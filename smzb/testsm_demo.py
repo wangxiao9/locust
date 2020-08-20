@@ -33,7 +33,7 @@ class TestLogin(TaskSet):
 class WebUser(HttpUser):
     tasks = [TestLogin]
     wait_time = between(2, 5)
-    host = "http://47.102.113.194:5000"
+    host = "http://127.0.0.1:5000"
 
 
 if __name__ == '__main__':

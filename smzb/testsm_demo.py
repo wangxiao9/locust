@@ -1,25 +1,40 @@
 __author__ = 'wangxiao'
 
-
 # 导入对应的库
 
-from locust import HttpUser, TaskSet, task, HttpLocust, between
+from locust import HttpUser, task, between, TaskSet
 import os
+from random import choice
 
 
 # 任务类
 
-
-
-class TestSouMi(HttpUser):
-    wait_time = between(5, 30)
+class TestLogin(TaskSet):
+    def on_start(self):
+        self.data = [{"account": "wangxiao@qq.com", "password": "123456"},
+                     {"account": "tester06@qq.com", "password": "123456"},
+                     {"account": "admin@admin.com", "password": "123456"},
+                     {"account": "admin@admin.com", "password": "12334456"}
+                     ]
 
     @task
-    def index_page(self):
-        self.client.get("/")
-        print("收米直播")
+    def to_login(self):
+        with self.client.post("/v1/token", json=choice(self.data), catch_response=True) as response:
+            res = response.json()
+            if res['error_code'] == 0:
+                response.success()
+            else:
+                response.failure(res['msg'])
+
+    def on_stop(self):
+        print("task结束")
+
+
+class WebUser(HttpUser):
+    tasks = [TestLogin]
+    wait_time = between(2, 5)
+    host = "http://47.102.113.194:5000"
 
 
 if __name__ == '__main__':
-    print(os.getcwd())
-    # os.system("locust -f testsm_demo.py --host=http://smzb.tv:66")
+    os.system("locust -f testsm_demo.py")

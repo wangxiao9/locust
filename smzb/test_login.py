@@ -25,32 +25,16 @@ class TestFunction(HttpUser):
     #     res = self.client.post("/v1/token", json=data)
     #     print(res.text)
 
-    # @task
-    # def to_login(self):
-    #     data = [{"username": "admin123456", "password": "admin123456", "savePassword": False, "loginType": "dpp",
-    #             "loginApplication": "dpp"},
-    #             {"username": "wangxiao", "password": "ofm123##", "savePassword": False, "loginType": "dpp",
-    #              "loginApplication": "dpp"},
-    #             {"username": "wangxiao2", "password": "ofm123##", "savePassword": False, "loginType": "dpp",
-    #              "loginApplication": "dpp"}
-    #             ]
-    #     randindex = randint(1, 10) % len(data)
-    #     res = self.client.post("/gateway/cas/inner/login", json=data[randindex])
-    #     print(data[randindex]['username'])
-    #     print(res.text)
     def on_start(self):
-        self.loginData = [{"username": "admin123456", "password": "admin123456", "savePassword": False, "loginType": "dpp",
-                 "loginApplication": "dpp"},
-                {"username": "wangxiao", "password": "ofm123##", "savePassword": False, "loginType": "dpp",
-                 "loginApplication": "dpp"},
-                {"username": "wangxiao2", "password": "123456", "savePassword": False, "loginType": "dpp",
-                 "loginApplication": "dpp"}
+        self.loginData = [{"username": "admin123456", "password": "admin123456", "savePassword": False},
+                {"username": "wangxiao", "password": "ofm123##", "savePassword": False},
+                {"username": "wangxiao2", "password": "123456", "savePassword": False}
                 ]
 
     @task
     def to_login(self):
         randindex = randint(1, 10) % len(self.loginData)
-        with self.client.post("/gateway/cas/inner/login", json=self.loginData[randindex], catch_response=True) as response:
+        with self.client.post("/inner/login", json=self.loginData[randindex], catch_response=True) as response:
             json_str = response.json()
             code = json_str["code"]
             if code == 0:
@@ -63,4 +47,4 @@ class TestFunction(HttpUser):
         # print()
 
 if __name__ == '__main__':
-    os.system("locust -f test_login.py --host=http://10.192.30.232")
+    os.system("locust -f test_login.py --host=http://127.0.0.1")

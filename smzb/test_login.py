@@ -26,8 +26,8 @@ class TestFunction(HttpUser):
     #     print(res.text)
 
     def on_start(self):
-        self.loginData = [{"username": "admin123456", "password": "admin123456", "savePassword": False},
-                {"username": "wangxiao", "password": "ofm123##", "savePassword": False},
+        self.loginData = [{"username": "admin", "password": "admin", "savePassword": False},
+                {"username": "wangxiao", "password": "##", "savePassword": False},
                 {"username": "wangxiao2", "password": "123456", "savePassword": False}
                 ]
 
